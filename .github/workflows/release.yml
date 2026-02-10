@@ -2,8 +2,8 @@ name: Build & Release APK
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -34,39 +36,37 @@ jobs:
           key: gradle-${{ hashFiles('**/*.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: gradle-
 
+      - name: Generate version
+        id: version
+        run: |
+          DATE=$(date +'%Y.%m.%d')
+          echo "VERSION_NAME=${DATE}.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "VERSION_CODE=${{ github.run_number }}" >> $GITHUB_OUTPUT
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Release APK
-        run: ./gradlew assembleRelease
-
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_apk
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "35.0.0"
-
-      - name: Extract version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      - name: Build Debug APK
+        run: |
+          ./gradlew assembleDebug \
+            -PversionCode=${{ steps.version.outputs.VERSION_CODE }} \
+            -PversionName=${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Rename APK
         run: |
-          mv ${{ steps.sign_apk.outputs.signedReleaseFile }} \
-            app/build/outputs/apk/release/liandian-${{ steps.version.outputs.VERSION }}.apk
+          mv app/build/outputs/apk/debug/app-debug.apk \
+            app/build/outputs/apk/debug/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: 连点器 v${{ steps.version.outputs.VERSION }}
+          tag_name: v${{ steps.version.outputs.VERSION_NAME }}
+          name: 连点器 v${{ steps.version.outputs.VERSION_NAME }}
           body: |
-            ## 连点器 v${{ steps.version.outputs.VERSION }}
+            ## 连点器 v${{ steps.version.outputs.VERSION_NAME }}
+
+            构建编号: #${{ github.run_number }}
+            提交: ${{ github.sha }}
 
             ### 安装说明
             1. 下载下方 APK 文件
@@ -77,5 +77,5 @@ jobs:
             - 连点模式：设置靶标 + 间隔，自动循环点击
             - 录制模式：录制触摸操作，精确回放
           files: |
-            app/build/outputs/apk/release/liandian-${{ steps.version.outputs.VERSION }}.apk
+            app/build/outputs/apk/debug/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
           generate_release_notes: true
