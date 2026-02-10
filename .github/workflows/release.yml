@@ -46,16 +46,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Debug APK
+      - name: Build Release APK
         run: |
-          ./gradlew assembleDebug \
+          ./gradlew assembleRelease \
             -PversionCode=${{ steps.version.outputs.VERSION_CODE }} \
             -PversionName=${{ steps.version.outputs.VERSION_NAME }}
 
       - name: Rename APK
         run: |
-          mv app/build/outputs/apk/debug/app-debug.apk \
-            app/build/outputs/apk/debug/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
+          mv app/build/outputs/apk/release/app-release.apk \
+            app/build/outputs/apk/release/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -77,5 +77,5 @@ jobs:
             - 连点模式：设置靶标 + 间隔，自动循环点击
             - 录制模式：录制触摸操作，精确回放
           files: |
-            app/build/outputs/apk/debug/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
+            app/build/outputs/apk/release/liandian-${{ steps.version.outputs.VERSION_NAME }}.apk
           generate_release_notes: true
