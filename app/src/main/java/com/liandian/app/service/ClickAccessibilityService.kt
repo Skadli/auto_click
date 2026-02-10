@@ -1,12 +1,20 @@
 package com.liandian.app.service
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.view.accessibility.AccessibilityEvent
 
 class ClickAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         super.onServiceConnected()
+        try {
+            // 动态配置：不订阅任何事件，仅保留手势派发能力
+            serviceInfo = (serviceInfo ?: AccessibilityServiceInfo()).apply {
+                eventTypes = 0
+            }
+        } catch (_: Exception) {
+        }
         GestureBridge.accessibilityService = this
     }
 
@@ -15,7 +23,6 @@ class ClickAccessibilityService : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        // no-op
     }
 
     override fun onDestroy() {

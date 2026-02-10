@@ -2,11 +2,11 @@ package com.liandian.app.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.os.Build
 import android.graphics.Path
 
 object GestureBridge {
 
+    @Volatile
     var accessibilityService: AccessibilityService? = null
 
     fun isAvailable(): Boolean = accessibilityService != null

@@ -88,11 +88,11 @@ class OverlayService : Service(), LifecycleOwner, SavedStateRegistryOwner {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun showFloatingButton() {
-        val container = FrameLayout(this)
-        val composeView = ComposeView(this).also {
+        val container = FrameLayout(this).also {
             it.setViewTreeLifecycleOwner(this)
             it.setViewTreeSavedStateRegistryOwner(this)
         }
+        val composeView = ComposeView(this)
         container.addView(composeView)
 
         composeView.setContent {
@@ -161,11 +161,11 @@ class OverlayService : Service(), LifecycleOwner, SavedStateRegistryOwner {
     }
 
     private fun showPanel() {
-        val container = FrameLayout(this)
-        val composeView = ComposeView(this).also {
+        val container = FrameLayout(this).also {
             it.setViewTreeLifecycleOwner(this)
             it.setViewTreeSavedStateRegistryOwner(this)
         }
+        val composeView = ComposeView(this)
         container.addView(composeView)
 
         composeView.setContent {
