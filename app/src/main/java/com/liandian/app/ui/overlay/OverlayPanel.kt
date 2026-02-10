@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FiberManualRecord
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -95,14 +95,14 @@ fun OverlayPanel(
                                         containerColor = MaterialTheme.colorScheme.error
                                     )
                                 ) {
-                                    Icon(Icons.Default.FiberManualRecord, "开始录制")
+                                    Icon(Icons.Default.Create, "开始录制")
                                 }
                             }
                         }
                     }
                     EngineState.RECORDING -> {
                         FilledIconButton(onClick = onStop) {
-                            Icon(Icons.Default.Stop, "停止录制")
+                            Icon(Icons.Default.Clear, "停止录制")
                         }
                         FilledIconButton(onClick = {}) {
                             // 录制完后播放按钮（停止录制后自动切到播放）
@@ -111,7 +111,7 @@ fun OverlayPanel(
                     }
                     EngineState.PLAYING -> {
                         FilledIconButton(onClick = onStop) {
-                            Icon(Icons.Default.Stop, "停止")
+                            Icon(Icons.Default.Clear, "停止")
                         }
                     }
                 }
