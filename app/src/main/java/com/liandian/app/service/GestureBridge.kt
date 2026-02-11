@@ -36,7 +36,7 @@ object GestureBridge {
 
     fun buildTap(x: Float, y: Float): GestureDescription {
         val path = Path().apply { moveTo(x, y) }
-        val stroke = GestureDescription.StrokeDescription(path, 0L, 50L)
+        val stroke = GestureDescription.StrokeDescription(path, 0L, 10L)
         return GestureDescription.Builder().addStroke(stroke).build()
     }
 

@@ -64,9 +64,19 @@ fun OverlayPanel(
                     detectTapGestures {
                         if (isEditingInterval) {
                             // 先提交输入值
-                            val value = editingText.toLongOrNull()
-                            if (value != null && value in 1..600000) {
-                                onIntervalChange(value)
+                            val text = editingText.trim()
+                            val valueMs = when {
+                                text.endsWith("s", ignoreCase = true) && !text.endsWith("ms", ignoreCase = true) -> {
+                                    val num = text.dropLast(1).trim().toDoubleOrNull()
+                                    num?.let { (it * 1000).toLong() }
+                                }
+                                text.endsWith("ms", ignoreCase = true) -> {
+                                    text.dropLast(2).trim().toLongOrNull()
+                                }
+                                else -> text.toLongOrNull()
+                            }
+                            if (valueMs != null && valueMs in 50..600000) {
+                                onIntervalChange(valueMs)
                             }
                             isEditingInterval = false
                             onEditingChange(false)
@@ -211,9 +221,19 @@ private fun TapModeContent(
     }
 
     fun commitEdit() {
-        val value = editText.toLongOrNull()
-        if (value != null && value in 1..600000) {
-            onIntervalChange(value)
+        val text = editText.trim()
+        val valueMs = when {
+            text.endsWith("s", ignoreCase = true) && !text.endsWith("ms", ignoreCase = true) -> {
+                val num = text.dropLast(1).trim().toDoubleOrNull()
+                num?.let { (it * 1000).toLong() }
+            }
+            text.endsWith("ms", ignoreCase = true) -> {
+                text.dropLast(2).trim().toLongOrNull()
+            }
+            else -> text.toLongOrNull()
+        }
+        if (valueMs != null && valueMs in 50..600000) {
+            onIntervalChange(valueMs)
         }
         onEditingChange(false)
     }
@@ -230,10 +250,10 @@ private fun TapModeContent(
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 keyboardActions = KeyboardActions(onDone = { commitEdit() }),
                 singleLine = true,
-                suffix = { Text("ms") }
+                placeholder = { Text("ms 或 s") }
             )
         }
         LaunchedEffect(Unit) {
@@ -259,7 +279,7 @@ private fun TapModeContent(
     Slider(
         value = intervalMs.toFloat(),
         onValueChange = { onIntervalChange(it.toLong()) },
-        valueRange = 1f..5000f,
+        valueRange = 50f..5000f,
         modifier = Modifier
             .fillMaxWidth()
             .height(28.dp)
@@ -272,7 +292,7 @@ private fun TapModeContent(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         TextButton(
-            onClick = { onIntervalChange((intervalMs - 100).coerceAtLeast(1)) },
+            onClick = { onIntervalChange((intervalMs - 100).coerceAtLeast(50)) },
             modifier = Modifier.height(28.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
         ) { Text("-100", style = MaterialTheme.typography.labelSmall) }

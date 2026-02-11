@@ -246,7 +246,7 @@ class OverlayService : Service(), LifecycleOwner, SavedStateRegistryOwner {
                     engineState = engineState,
                     tapPointCount = pointCount,
                     intervalMs = interval,
-                    onIntervalChange = { intervalMs.value = it },
+                    onIntervalChange = { intervalMs.value = it.coerceAtLeast(50) },
                     onAddTapPoint = { addTapTarget() },
                     onStartTap = { startQuickTap() },
                     onStartRecord = { startRecording() },
