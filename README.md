@@ -2,10 +2,17 @@
 
 一款 Android 悬浮窗连点器工具，支持快速连点和录制回放两种模式。用户可在任意 App 或网页上通过悬浮控件设置点击位置和频率，实现自动化点击操作。
 
-![封面图](./docs/title.jpg "封面图演示")
-![app界面1](./docs/1.jpg "app界面1演示")
-![app界面2](./docs/2.jpg "app界面2演示")
-![app界面3](./docs/3.jpg "app界面3演示")
+<div align="center">
+  <img src="./docs/title.jpg" alt="封面图演示" title="封面图演示" width="80%">
+</div>
+
+<br>
+
+<div align="center">
+  <img src="./docs/1.jpg" alt="app界面1演示" title="app界面1演示" width="30%">
+  <img src="./docs/2.jpg" alt="app界面2演示" title="app界面2演示" width="30%">
+  <img src="./docs/3.jpg" alt="app界面3演示" title="app界面3演示" width="30%">
+</div>
 
 ## 功能特性
 
